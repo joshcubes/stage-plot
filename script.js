@@ -390,7 +390,15 @@ document.getElementById("zoom-out-btn").addEventListener("click", () => {
 });
 
 // --- Import / Export and Clear ---
+// Export JSON as a downloadable file with a custom filename
 document.getElementById("export-btn").addEventListener("click", () => {
+  // Ask the user for a file name (without extension)
+  let fileName = prompt("Enter a name for your export file (without extension):", "canvas-data");
+  // If the user cancels or doesn't enter a name, use a default filename
+  if (!fileName || fileName.trim() === "") {
+    fileName = "canvas-data";
+  }
+
   let items = [];
   document.querySelectorAll("#canvas-content > .canvas-item").forEach((item) => {
     items.push({
@@ -402,34 +410,65 @@ document.getElementById("export-btn").addEventListener("click", () => {
       text: item.dataset.type === "custom-text" ? item.innerText : undefined,
     });
   });
-  let json = JSON.stringify(items, null, 2);
-  prompt("Copy your exported JSON:", json);
+
+  const json = JSON.stringify(items, null, 2);
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = fileName.trim() + ".json"; // Append the .json extension
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+// Import JSON via a file upload
+document.getElementById("import-btn").addEventListener("click", () => {
+  // Create an invisible file input element
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = "application/json";
+  
+  // Listen for file selection
+  input.addEventListener("change", (ev) => {
+    const file = ev.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      
+      reader.onload = (loadEvent) => {
+        try {
+          const items = JSON.parse(loadEvent.target.result);
+          
+          // Assuming canvasContent is a reference to your canvas container element:
+          const canvasContent = document.getElementById("canvas-content");
+          // Clear canvas content and re-add grid canvas.
+          canvasContent.innerHTML = "";
+          items.forEach((data) => {
+            let newItem = createCanvasItem(data.type, true);
+            newItem.dataset.x = data.x;
+            newItem.dataset.y = data.y;
+            newItem.dataset.rotation = data.rotation;
+            newItem.dataset.scale = data.scale;
+            updateItemTransform(newItem);
+            if (data.type === "custom-text") {
+              newItem.innerText = data.text || "Double-click to edit";
+            }
+          });
+          updateCanvasTransform();
+        } catch (err) {
+          alert("Invalid JSON");
+        }
+      };
+      
+      reader.readAsText(file);
+    }
+  });
+  
+  // Trigger the file dialog
+  input.click();
 });
 
-document.getElementById("import-btn").addEventListener("click", () => {
-  let json = prompt("Paste your JSON here:");
-  if (json) {
-    try {
-      let items = JSON.parse(json);
-      // Clear canvas content and re-add grid canvas.
-      canvasContent.innerHTML = "";
-      items.forEach((data) => {
-        let newItem = createCanvasItem(data.type, true);
-        newItem.dataset.x = data.x;
-        newItem.dataset.y = data.y;
-        newItem.dataset.rotation = data.rotation;
-        newItem.dataset.scale = data.scale;
-        updateItemTransform(newItem);
-        if (data.type === "custom-text") {
-          newItem.innerText = data.text || "Double-click to edit";
-        }
-      });
-      updateCanvasTransform();
-    } catch (err) {
-      alert("Invalid JSON");
-    }
-  }
-});
 
 document.getElementById("clear-btn").addEventListener("click", () => {
   if (confirm("Are you sure you want to clear the canvas?")) {
