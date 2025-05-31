@@ -25,4 +25,4 @@ Stage Plot Designer is hosted online for quick access, but you are free to downl
 
 ## License
 
-I'm not gonna lie to you—this thing was made with AI, and it does the job I wanted out of it. Do whatever you want with it.
+I'm not gonna lie to you—this thing was made with AI, and it does the job I wanted out of it I only understand about two thirds of the code in the thing. Do whatever you want with it I couldn't care less.
