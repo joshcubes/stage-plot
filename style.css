@@ -76,26 +76,22 @@ img {
   border: 2px solid #333;
 }
 
-/* Grid layer inside canvas-content */
-#grid {
+/* Grid canvas (this is now used to draw grid lines via JavaScript) */
+#grid-canvas {
   position: absolute;
   top: 0;
   left: 0;
+  /* It fills the entire #canvas element */
   width: 100%;
   height: 100%;
   pointer-events: none;
-  /* Increased opacity for visibility */
-  background-image: 
-    linear-gradient(0deg, rgba(0, 0, 0, 0.3) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.3) 1px, transparent 1px);
-  background-size: 20px 20px;
-  display: block; /* Visible by default */
   z-index: 0;
 }
 
 /* Canvas content container (transformed for pan/zoom) */
 #canvas-content {
   position: relative;
+  z-index: 1;
   transform-origin: 0 0;
 }
 
@@ -104,7 +100,7 @@ img {
   position: absolute;
   touch-action: none;
   cursor: move;
-  z-index: 1;
+  z-index: 2;
 }
 
 /* Selected item outline */
