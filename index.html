@@ -11,20 +11,23 @@
       <aside id="library">
         <h2>Library</h2>
         <div id="library-items">
-          <!-- Filled in by script.js from items.txt -->
+          <!-- Items will be loaded from items.txt -->
         </div>
       </aside>
 
       <!-- Main canvas area -->
       <main id="canvas">
         <div id="canvas-content">
-          <!-- Dropped (canvas) items go here -->
+          <!-- Grid layer (always present, visible by default) -->
+          <div id="grid"></div>
+          <!-- Canvas items will be appended here -->
         </div>
       </main>
 
       <!-- Control panel at the bottom -->
       <footer id="control-panel">
         <button id="toggle-grid-btn">Toggle Grid</button>
+        <button id="toggle-snap-btn">Toggle Snap</button>
         <button id="import-btn">Import JSON</button>
         <button id="export-btn">Export JSON</button>
         <button id="clear-btn">Clear Canvas</button>
