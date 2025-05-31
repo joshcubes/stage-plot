@@ -1,0 +1,6 @@
+amp
+drum
+guitar
+mic
+monitor
+custom-text
